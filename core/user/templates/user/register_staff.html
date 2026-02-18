@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Регистрация нового сотрудника{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-dark">
+            <div class="card-header bg-dark text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-shield-lock-fill"></i> Регистрация сотрудника</h4>
+            </div>
+            
+            <div class="card-body p-4">
+                <div class="alert alert-info d-flex align-items-center mb-4">
+                    <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                    <div>
+                        Вы создаете учетную запись для персонала. Этот пользователь получит доступ к панели управления CRM.
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            <div class="text-danger small">{{ form.first_name.errors }}</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            <div class="text-danger small">{{ form.last_name.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.username.label }}</label>
+                            {{ form.username }}
+                            <div class="form-text text-muted small">{{ form.username.help_text }}</div>
+                            <div class="text-danger small">{{ form.username.errors }}</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            <div class="text-danger small">{{ form.email.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ form.phone.label }}</label>
+                        {{ form.phone }}
+                        <div class="text-danger small">{{ form.phone.errors }}</div>
+                    </div>
+
+                    <hr>
+
+                    {% for field in form %}
+                        {% if field.name not in 'first_name last_name username email phone_number is_superuser_flag' %}
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                                {% endif %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <hr>
+
+                    <div class="mb-4 p-3 bg-warning bg-opacity-10 border border-warning rounded">
+                        <div class="form-check form-switch">
+                            {{ form.is_superuser_flag }}
+                            <label class="form-check-label fw-bold text-dark" for="{{ form.is_superuser_flag.id_for_label }}">
+                                {{ form.is_superuser_flag.label }}
+                            </label>
+                        </div>
+                        <div class="mt-2 text-dark small">
+                            <i class="bi bi-exclamation-triangle-fill"></i> 
+                            <strong>Осторожно:</strong> Если вы включите эту опцию, сотрудник получит <u>полный доступ</u> ко всем разделам сайта, включая удаление данных и управление другими сотрудниками.
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg">
+                            <i class="bi bi-person-plus-fill"></i> Зарегистрировать сотрудника
+                        </button>
+                        <a href="{% url 'app:staff_dashboard' %}" class="btn btn-outline-secondary">
+                            Отмена
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

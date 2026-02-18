@@ -1,0 +1,38 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Django ---
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# --- Виртуальное окружение (ОБЯЗАТЕЛЬНО) ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Переменные окружения и секреты (КРИТИЧНО) ---
+.env
+.env.*
+
+# --- Медиа и Статика ---
+# media - это загруженные фото/видео машин. Им не место в Git.
+media/
+# staticfiles - это папка, куда собирается статика командой collectstatic.
+# В Git храним только исходную папку static/ (если она есть).
+staticfiles/
+static_root/
+
+# --- IDE (PyCharm, VS Code) ---
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Операционные системы ---
+.DS_Store
+Thumbs.db

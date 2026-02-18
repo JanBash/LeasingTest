@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование: {{ vehicle.brand }} {{ vehicle.model_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow border-0 mb-5">
+            <div class="card-header bg-warning bg-opacity-10 text-dark py-3 border-warning">
+                <h4 class="mb-0">
+                    <i class="bi bi-pencil-square"></i> Редактирование: {{ vehicle.brand }} {{ vehicle.model_name }}
+                </h4>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <h5 class="text-primary mb-3">Основные данные</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.brand.label }}</label>
+                            {{ form.brand }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.model_name.label }}</label>
+                            {{ form.model_name }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.year.label }}</label>
+                            {{ form.year }}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.license_plate.label }}</label>
+                            {{ form.license_plate }}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-success">{{ form.price.label }} ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-success text-white">$</span>
+                                {{ form.price }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.vin.label }}</label>
+                            {{ form.vin }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.color.label }}</label>
+                            {{ form.color }}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="bg-light p-3 rounded border mb-4">
+                        <h5 class="text-dark mb-3"><i class="bi bi-camera-reels"></i> Медиа</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">{{ form.video.label }}</label>
+                                {{ form.video }}
+                                {% if form.instance.video %}
+                                    <div class="mt-2 small text-success">
+                                        <i class="bi bi-check-circle"></i> Загружено: {{ form.instance.video.name }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-light p-3 rounded border mb-4">
+                        <h5 class="text-success mb-3"><i class="bi bi-geo-alt-fill"></i> GPS (Wialon)</h5>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">IMEI (Unique ID)</label>
+                                {{ form.wialon_imei }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h5 class="text-primary mb-3">Характеристики</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">{{ form.mileage.label }}</label>
+                            <div class="input-group">
+                                {{ form.mileage }}
+                                <span class="input-group-text">км</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">{{ form.engine_volume.label }}</label>
+                            <div class="input-group">
+                                {{ form.engine_volume }}
+                                <span class="input-group-text">л</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">{{ form.engine_type.label }}</label>
+                            {{ form.engine_type }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">{{ form.transmission.label }}</label>
+                            {{ form.transmission }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.drive_type.label }}</label>
+                            {{ form.drive_type }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.body_type.label }}</label>
+                            {{ form.body_type }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">{{ form.overall_status.label }}</label>
+                            {{ form.overall_status }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{{ form.full_name_of_contractor.label }}</label>
+                        {{ form.full_name_of_contractor }}
+                    </div>
+
+                    <hr>
+
+                    <h5 class="text-primary mb-3"><i class="bi bi-stars"></i> Техническое состояние</h5>
+
+                    <div class="p-4 bg-light rounded border mb-4">
+
+                        <div class="mb-4 pb-3 border-bottom">
+                            <label class="form-label fw-bold"><i class="bi bi-file-earmark-pdf text-danger"></i> {{ form.computer_assessment.label }}</label>
+                            {{ form.computer_assessment }}
+                            <div class="form-text">Загрузите официальный PDF документ с результатами диагностики.</div>
+                            {% if form.instance.computer_assessment %}
+                                <div class="mt-2">
+                                    <a href="{{ form.instance.computer_assessment.url }}" target="_blank" class="text-decoration-none">
+                                        <i class="bi bi-eye"></i> Посмотреть текущий файл
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row g-3">
+                            </div>
+                    </div>
+                    <div class="p-4 bg-light rounded border mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.engine_rating.label }}</label>
+                                {{ form.engine_rating }}
+                                <div class="form-text">Оценка от 1 до 5</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.transmission_rating.label }}</label>
+                                {{ form.transmission_rating }}
+                                <div class="form-text">Оценка от 1 до 5</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.chassis_rating.label }}</label>
+                                {{ form.chassis_rating }}
+                                <div class="form-text">Оценка от 1 до 5</div>
+                            </div>
+
+                            <div class="col-12 mt-2">
+                                <label class="form-label fw-bold"><i class="bi bi-vinyl"></i> {{ form.tire_tread.label }}</label>
+                                {{ form.tire_tread }}
+                                <div class="form-text text-muted">Например: "Зимняя, шипы, новая"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-muted text-uppercase small fw-bold mb-3">Дополнительное оборудование</h6>
+                    <div class="alert alert-white border">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                            {% for field in form %}
+                                {# Скрываем поля, которые уже вывели выше, включая price #}
+                                {% if field.name not in 'price engine_rating transmission_rating chassis_rating tire_tread brand model_name year license_plate vin color video wialon_imei mileage engine_volume engine_type transmission drive_type body_type overall_status full_name_of_contractor computer_assessment' %}
+                                    {% if field.field.widget.input_type == 'checkbox' %}
+                                        <div class="col">
+                                            <div class="form-check form-switch">
+                                                {{ field }}
+                                                <label class="form-check-label ms-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-warning btn-lg shadow-sm">
+                            <i class="bi bi-check-lg"></i> Сохранить изменения
+                        </button>
+                        <a href="{% url 'app:vehicle_detail' vehicle.pk %}" class="btn btn-outline-secondary">
+                            Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Автоматическая стилизация полей
+    document.querySelectorAll('input[type="text"], input[type="number"], input[type="file"], select').forEach(el => {
+        if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+            el.classList.add('form-control');
+        }
+    });
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+        el.classList.add('form-check-input');
+    });
+</script>
+{% endblock %}

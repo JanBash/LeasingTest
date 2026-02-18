@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Клиент: {{ profile.full_name|default:client_user.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-0">
+                {% if profile.full_name %}
+                    {{ profile.full_name }}
+                {% else %}
+                    {{ client_user.username }} <span class="text-muted fs-6">(Профиль не заполнен)</span>
+                {% endif %}
+            </h1>
+            <p class="text-muted mb-0">Дата регистрации: {{ client_user.date_joined|date:"d.m.Y" }}</p>
+        </div>
+        <div>
+            <a href="mailto:{{ client_user.email }}" class="btn btn-outline-primary">
+                <i class="bi bi-envelope"></i> Написать
+            </a>
+            <button class="btn btn-primary" disabled>
+                <i class="bi bi-pencil"></i> Ред.
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body text-center pt-5 pb-4">
+                    {% if client_user.avatar %}
+                        <img src="{{ client_user.avatar.url }}" class="rounded-circle shadow-sm mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #fff;">
+                    {% else %}
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm" 
+                             style="width: 150px; height: 150px; border: 4px solid #fff;">
+                            <i class="bi bi-person-fill text-secondary display-1"></i>
+                        </div>
+                    {% endif %}
+
+                    <h5 class="fw-bold">{{ client_user.username }}</h5>
+                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Активный клиент</span>
+
+                    <hr class="my-4">
+
+                    <div class="text-start">
+                        <p class="mb-2">
+                            <i class="bi bi-telephone-fill text-primary me-2"></i>
+                            <strong>
+                                {# Логика: Если есть телефон в Профиле - берем его. Если нет - берем из Юзера. #}
+                                {{ profile.phone|default:client_user.phone|default:"Нет телефона" }}
+                            </strong>
+                        </p>
+                        <p class="mb-2"><i class="bi bi-envelope-fill text-primary me-2"></i> 
+                            {{ client_user.email }}
+                        </p>
+                        <p class="mb-0"><i class="bi bi-geo-alt-fill text-primary me-2"></i> 
+                            {{ profile.registration_address|default:"Адрес не указан" }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="fw-bold text-muted text-uppercase small mb-3">Статистика</h6>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Всего договоров:</span>
+                        <span class="fw-bold">{{ contracts.count }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Активных авто:</span>
+                        <span class="fw-bold text-success">
+                            {# Считаем активные в цикле или через annotate в view #}
+                            {% for c in contracts %}{% if c.status == 'active' %}1{% endif %}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-person-vcard"></i> Паспортные данные</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">Серия и номер</small>
+                            <span class="fs-5 fw-bold font-monospace">
+                                {{ profile.passport_series|default:"--" }} {{ profile.passport_number|default:"--" }}
+                            </span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">Дата выдачи</small>
+                            <span class="fs-5">{{ profile.passport_date|date:"d.m.Y"|default:"--" }}</span>
+                        </div>
+                    </div>
+
+                    <h6 class="text-muted small text-uppercase fw-bold mb-3">Сканы документов</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded p-2 text-center bg-light h-100 position-relative group-hover">
+                                {% if client_user.passport_front %}
+                                    <img src="{{ client_user.passport_front.url }}" class="img-fluid rounded mb-2" 
+                                         style="max-height: 200px; cursor: pointer;" 
+                                         onclick="openImage('{{ client_user.passport_front.url }}')">
+                                    <div class="small text-muted">Лицевая сторона</div>
+                                {% else %}
+                                    <div class="py-5 text-muted">
+                                        <i class="bi bi-file-earmark-image display-4"></i>
+                                        <p class="mt-2 mb-0">Нет скана</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="border rounded p-2 text-center bg-light h-100">
+                                {% if client_user.passport_back %}
+                                    <img src="{{ client_user.passport_back.url }}" class="img-fluid rounded mb-2" 
+                                         style="max-height: 200px; cursor: pointer;"
+                                         onclick="openImage('{{ client_user.passport_back.url }}')">
+                                    <div class="small text-muted">Оборот</div>
+                                {% else %}
+                                    <div class="py-5 text-muted">
+                                        <i class="bi bi-file-earmark-image display-4"></i>
+                                        <p class="mt-2 mb-0">Нет скана</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> История аренды</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Автомобиль</th>
+                                <th>Договор</th>
+                                <th>Период</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contract in contracts %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="fw-bold">{{ contract.vehicle.brand }} {{ contract.vehicle.model_name }}</div>
+                                    </div>
+                                    <small class="text-muted">{{ contract.vehicle.license_plate }}</small>
+                                </td>
+                                <td>
+                                    №{{ contract.contract_number }}
+                                </td>
+                                <td>
+                                    <div class="small">{{ contract.start_date|date:"d.m.y" }} -</div>
+                                    <div class="small">{{ contract.end_date|date:"d.m.y" }}</div>
+                                </td>
+                                <td>
+                                    {% if contract.status == 'active' %}
+                                        <span class="badge bg-success">Действует</span>
+                                    {% elif contract.status == 'completed' %}
+                                        <span class="badge bg-secondary">Завершен</span>
+                                    {% elif contract.status == 'debt' %}
+                                        <span class="badge bg-danger">Долг</span>
+                                    {% else %}
+                                        <span class="badge bg-dark">{{ contract.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'app:vehicle_detail' contract.vehicle.pk %}" class="btn btn-sm btn-outline-primary" title="Перейти к авто">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    Клиент еще не заключал договоров
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-transparent border-0 shadow-none">
+      <div class="modal-body p-0 text-center position-relative">
+          <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          <img id="modalImage" src="" class="img-fluid rounded shadow-lg" style="max-height: 90vh;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function openImage(url) {
+        var modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        document.getElementById('modalImage').src = url;
+        modal.show();
+    }
+</script>
+{% endblock %}

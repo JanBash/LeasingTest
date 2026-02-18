@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Оформление договора{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card shadow border-primary mb-5">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-text"></i> Новый договор лизинга</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <div class="alert alert-light border d-flex align-items-center mb-4 bg-light">
+                    <div class="me-3 text-center text-primary">
+                        <i class="bi bi-car-front-fill display-6"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1 text-dark">{{ vehicle.brand }} {{ vehicle.model_name }} ({{ vehicle.year }})</h5>
+                        <div class="text-muted small">
+                            <span class="me-3"><i class="bi bi-upc-scan"></i> VIN: <strong>{{ vehicle.vin }}</strong></span>
+                            <span><i class="bi bi-card-heading"></i> Госномер: <strong>{{ vehicle.license_plate }}</strong></span>
+                        </div>
+                    </div>
+                    <div class="ms-auto text-end">
+                        <span class="badge bg-success fs-6">{{ vehicle.price }} $</span>
+                        <div class="text-muted small">Базовая цена</div>
+                    </div>
+                </div>
+
+                <form method="post" id="contractForm">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul class="mb-0 ps-3">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-bold">Клиент <span class="text-danger">*</span></label>
+                            {{ form.client }}
+                            <div class="form-text">Выберите клиента из базы. Если клиента нет, сначала создайте его.</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.start_date.label }}</label>
+                            {{ form.start_date }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.end_date.label }}</label>
+                            {{ form.end_date }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="text-primary mb-3"><i class="bi bi-calculator"></i> Финансовые условия</h5>
+                    <div class="card bg-light border-0 p-3 mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.total_amount.label }}</label>
+                                <div class="input-group">
+                                    {{ form.total_amount }}
+                                    <span class="input-group-text bg-white text-muted">₽</span>
+                                </div>
+                                <div class="form-text">Подтянулась из цены авто</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-primary">{{ form.initial_payment_percent.label }}</label>
+                                <div class="input-group">
+                                    {{ form.initial_payment_percent }}
+                                    <span class="input-group-text bg-primary text-white fw-bold">%</span>
+                                </div>
+                                <div class="form-text">Введите %, сумма пересчитается</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.initial_payment.label }}</label>
+                                <div class="input-group">
+                                    {{ form.initial_payment }}
+                                    <span class="input-group-text bg-white text-muted">₽</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-success">{{ form.monthly_payment.label }}</label>
+                                <div class="input-group">
+                                    {{ form.monthly_payment }}
+                                    <span class="input-group-text bg-success text-white">₽</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ form.payment_due_day.label }}</label>
+                                {{ form.payment_due_day }}
+                                <div class="form-text">Число месяца для оплаты (1-31).</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'app:vehicle_detail' vehicle.pk %}" class="btn btn-outline-secondary px-4">Отмена</a>
+                        <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm">
+                            <i class="bi bi-check-circle"></i> Оформить договор
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Находим поля по их ID (Django по умолчанию дает id="id_имяполя")
+        const totalAmountInput = document.getElementById('id_total_amount');
+        const percentInput = document.getElementById('id_initial_payment_percent');
+        const initialPaymentInput = document.getElementById('id_initial_payment');
+
+        function calculatePayment() {
+            const total = parseFloat(totalAmountInput.value) || 0;
+            const percent = parseFloat(percentInput.value) || 0;
+
+            if (total > 0 && percent >= 0) {
+                // Считаем сумму
+                const result = (total * percent) / 100;
+                // Округляем до 2 знаков и записываем
+                initialPaymentInput.value = result.toFixed(2);
+            }
+        }
+
+        // Слушаем изменения в поле цены (если вдруг менеджер решит поменять цену вручную)
+        if (totalAmountInput) {
+            totalAmountInput.addEventListener('input', calculatePayment);
+        }
+
+        // Слушаем изменения в поле процента
+        if (percentInput) {
+            percentInput.addEventListener('input', calculatePayment);
+        }
+    });
+</script>
+{% endblock %}

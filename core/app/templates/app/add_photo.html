@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить фото{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">📸 Добавить фото в галерею</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Автомобиль: <strong>{{ vehicle.brand }} {{ vehicle.model_name }}</strong> ({{ vehicle.license_plate }})
+                </p>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{{ form.gallery.label }}</label>
+                        {{ form.gallery }}
+                        <div class="form-text">Удерживайте Ctrl (Cmd), чтобы выбрать несколько файлов сразу.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Загрузить</button>
+                        <a href="{% url 'app:vehicle_detail' vehicle.pk %}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

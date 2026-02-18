@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Регистрация нового клиента{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Регистрация клиента</h4>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                    <h5 class="text-primary mb-3">Учетная запись</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.username.label }}</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.email.label }}</label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+
+                    <h5 class="text-primary mb-3 mt-2">Личные данные</h5>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">{{ form.full_name.label }}</label>
+                            {{ form.full_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.avatar.label }}</label>
+                            {{ form.avatar }}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h5 class="text-primary mb-3">Паспортные данные</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ form.passport_series.label }}</label>
+                            {{ form.passport_series }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ form.passport_number.label }}</label>
+                            {{ form.passport_number }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ form.passport_date.label }}</label>
+                            {{ form.passport_date }}
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label">{{ form.registration_address.label }}</label>
+                            {{ form.registration_address }}
+                        </div>
+                    </div>
+
+                    <div class="row bg-light p-3 rounded border mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold"><i class="bi bi-file-image"></i> {{ form.passport_front.label }}</label>
+                            {{ form.passport_front }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold"><i class="bi bi-file-image"></i> {{ form.passport_back.label }}</label>
+                            {{ form.passport_back }}
+                        </div>
+                    </div>
+
+                    {% for field in form %}
+                        {% if field.name not in 'username email full_name phone avatar passport_series passport_number passport_date registration_address passport_front passport_back' %}
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Зарегистрировать клиента</button>
+                        <a href="{% url 'app:staff_search' %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

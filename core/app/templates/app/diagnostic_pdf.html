@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        /* Шрифт с поддержкой кириллицы. Путь оставляем твой */
+        @font-face {
+            font-family: 'DejaVuSans';
+            src: url('file:///C:/Users/PC/PycharmProjects/PythonProject2/core/static/fonts/DejaVuSans.ttf');
+        }
+
+        @page {
+            size: A4;
+            margin: 0.5cm; /* Уменьшил поля, чтобы все влезло на 1 страницу */
+        }
+
+        body {
+            font-family: 'DejaVuSans', sans-serif;
+            font-size: 8px; /* Шрифт компактнее */
+            line-height: 1.1;
+            color: #000;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .title-brand { font-size: 16px; font-weight: bold; color: #0d6efd; }
+
+        /* Сетка в две колонки */
+        .main-container {
+            display: flex;
+            gap: 10px;
+        }
+        .column { flex: 1; }
+
+        .section-title {
+            background: #e9ecef;
+            color: #000;
+            padding: 3px;
+            font-weight: bold;
+            text-align: center;
+            margin: 8px 0 4px 0;
+            font-size: 9px;
+            border: 1px solid #ccc;
+        }
+
+        h4 { margin: 6px 0 2px 0; font-size: 9px; color: #0d6efd; border-bottom: 1px solid #eee; text-transform: uppercase; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
+        th { background: #f8f9fa; border: 1px solid #999; padding: 2px; text-align: left; font-size: 7px; }
+        td { border: 1px solid #999; padding: 2px; vertical-align: middle;}
+
+        /* Стили состояния */
+        .checked { background: #ffe6e6; color: #cc0000; font-weight: bold; text-align: center; }
+        .ok { color: #28a745; text-align: center; font-weight: bold; font-size: 7px; }
+        .center { text-align: center; width: 30px; }
+
+        .footer-box {
+            margin-top: 10px;
+            padding: 5px;
+            border: 1px solid #000;
+            background: #fdfdfd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <div class="title-brand">AZA Service.kg</div>
+            <div>ул. Алма-Атинская, 291 | +996 570 266 6563</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 12px; font-weight: bold;">{{ vehicle.brand }} {{ vehicle.model_name }}</div>
+            <div style="font-size: 12px;">{{ vehicle.license_plate }}</div>
+            <div>Дата: {{ report.date|date:"d.m.Y" }}</div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="column">
+            <div class="section-title">ПЕРЕДНЯЯ ОСЬ</div>
+
+            <h4>Тормозная система</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Шланг тормозной</td><td class="{% if report.brake_front_hose_l %}checked{% else %}ok{% endif %}">{% if report.brake_front_hose_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.brake_front_hose_r %}checked{% else %}ok{% endif %}">{% if report.brake_front_hose_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Диск тормозной</td><td class="{% if report.brake_front_disc_l %}checked{% else %}ok{% endif %}">{% if report.brake_front_disc_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.brake_front_disc_r %}checked{% else %}ok{% endif %}">{% if report.brake_front_disc_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Колодки</td><td class="{% if report.brake_front_pads_l %}checked{% else %}ok{% endif %}">{% if report.brake_front_pads_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.brake_front_pads_r %}checked{% else %}ok{% endif %}">{% if report.brake_front_pads_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Суппорт</td><td class="{% if report.brake_front_caliper_l %}checked{% else %}ok{% endif %}">{% if report.brake_front_caliper_l %}ДЕФЕКТ{% else %}OK{% endif %}</td><td class="{% if report.brake_front_caliper_r %}checked{% else %}ok{% endif %}">{% if report.brake_front_caliper_r %}ДЕФЕКТ{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Подвеска</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Амортизатор</td><td class="{% if report.susp_front_shock_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_shock_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_shock_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_shock_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Опора стойки</td><td class="{% if report.susp_front_mount_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_mount_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_mount_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_mount_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Пыльник / Отбойник</td><td class="{% if report.susp_front_boot_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_boot_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_boot_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_boot_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Пружина</td><td class="{% if report.susp_front_spring_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_spring_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_spring_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_spring_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Шаровая нижняя</td><td class="{% if report.susp_front_ball_lower_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_ball_lower_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_ball_lower_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_ball_lower_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Шаровая верхняя</td><td class="{% if report.susp_front_ball_upper_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_ball_upper_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_ball_upper_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_ball_upper_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Подшипник ступицы</td><td class="{% if report.susp_front_bearing_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_bearing_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_bearing_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_bearing_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Развальный рычаг</td><td class="{% if report.susp_front_camber_arm_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_camber_arm_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_camber_arm_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_camber_arm_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Рулевое и Стабилизация</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Стабилизатор (Сам)</td><td class="{% if report.susp_front_stabilizer_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_stabilizer_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_stabilizer_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_stabilizer_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Втулки стаб.</td><td class="{% if report.susp_front_stab_bushing_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_stab_bushing_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_stab_bushing_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_stab_bushing_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Стойка стаб. (Солдатик)</td><td class="{% if report.susp_front_stab_link_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_stab_link_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_stab_link_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_stab_link_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Втулки стоек стаб.</td><td class="{% if report.susp_front_stab_link_bushing_l %}checked{% else %}ok{% endif %}">{% if report.susp_front_stab_link_bushing_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_front_stab_link_bushing_r %}checked{% else %}ok{% endif %}">{% if report.susp_front_stab_link_bushing_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Рулевая тяга</td><td class="{% if report.steering_tie_rod_l %}checked{% else %}ok{% endif %}">{% if report.steering_tie_rod_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.steering_tie_rod_r %}checked{% else %}ok{% endif %}">{% if report.steering_tie_rod_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Рулевой наконечник</td><td class="{% if report.steering_tip_l %}checked{% else %}ok{% endif %}">{% if report.steering_tip_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.steering_tip_r %}checked{% else %}ok{% endif %}">{% if report.steering_tip_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Рейка / Крестовина</td><td class="{% if report.steering_rack %}checked{% else %}ok{% endif %}">{% if report.steering_rack %}ДЕФЕКТ{% else %}OK{% endif %}</td><td class="{% if report.steering_ujoint %}checked{% else %}ok{% endif %}">{% if report.steering_ujoint %}ЛЮФТ{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Привод (ШРУСы)</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Граната наружная</td><td class="{% if report.drive_front_cv_outer_l %}checked{% else %}ok{% endif %}">{% if report.drive_front_cv_outer_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.drive_front_cv_outer_r %}checked{% else %}ok{% endif %}">{% if report.drive_front_cv_outer_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Граната внутренняя</td><td class="{% if report.drive_front_cv_inner_l %}checked{% else %}ok{% endif %}">{% if report.drive_front_cv_inner_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.drive_front_cv_inner_r %}checked{% else %}ok{% endif %}">{% if report.drive_front_cv_inner_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Сайлентблоки (Перед)</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Верх. рычаг (Передний)</td><td class="{% if report.susp_front_sb_upper_f_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_front_sb_upper_f_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Верх. рычаг (Задний)</td><td class="{% if report.susp_front_sb_upper_r_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_front_sb_upper_r_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Нижн. рычаг (Передний)</td><td class="{% if report.susp_front_sb_lower_f_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_front_sb_lower_f_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Нижн. рычаг (Задний)</td><td class="{% if report.susp_front_sb_lower_r_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_front_sb_lower_r_r %}checked{% else %}ok{% endif %}">X</td></tr>
+            </table>
+        </div>
+
+        <div class="column">
+            <div class="section-title">ЗАДНЯЯ ОСЬ</div>
+
+            <h4>Тормозная система</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Шланг тормозной</td><td class="{% if report.brake_rear_hose_l %}checked{% else %}ok{% endif %}">{% if report.brake_rear_hose_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.brake_rear_hose_r %}checked{% else %}ok{% endif %}">{% if report.brake_rear_hose_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Диск / Барабан</td><td class="{% if report.brake_rear_disc_l %}checked{% else %}ok{% endif %}">{% if report.brake_rear_disc_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.brake_rear_disc_r %}checked{% else %}ok{% endif %}">{% if report.brake_rear_disc_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Колодки</td><td class="{% if report.brake_rear_pads_l %}checked{% else %}ok{% endif %}">{% if report.brake_rear_pads_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.brake_rear_pads_r %}checked{% else %}ok{% endif %}">{% if report.brake_rear_pads_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Суппорт</td><td class="{% if report.brake_rear_caliper_l %}checked{% else %}ok{% endif %}">{% if report.brake_rear_caliper_l %}ДЕФЕКТ{% else %}OK{% endif %}</td><td class="{% if report.brake_rear_caliper_r %}checked{% else %}ok{% endif %}">{% if report.brake_rear_caliper_r %}ДЕФЕКТ{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Подвеска</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Амортизатор</td><td class="{% if report.susp_rear_shock_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_shock_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_shock_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_shock_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Опора стойки</td><td class="{% if report.susp_rear_mount_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_mount_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_mount_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_mount_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Пыльник / Отбойник</td><td class="{% if report.susp_rear_boot_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_boot_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_boot_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_boot_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Пружина</td><td class="{% if report.susp_rear_spring_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_spring_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_spring_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_spring_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Шаровая нижняя</td><td class="{% if report.susp_rear_ball_lower_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_ball_lower_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_ball_lower_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_ball_lower_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Шаровая верхняя</td><td class="{% if report.susp_rear_ball_upper_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_ball_upper_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_ball_upper_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_ball_upper_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Подшипник ступицы</td><td class="{% if report.susp_rear_bearing_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_bearing_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_bearing_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_bearing_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Развальный рычаг</td><td class="{% if report.susp_rear_camber_arm_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_camber_arm_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_camber_arm_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_camber_arm_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Стабилизация и Балка</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Сайлентблок балки</td><td class="{% if report.susp_rear_beam_bushing_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_beam_bushing_l %}ДЕФЕКТ{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_beam_bushing_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_beam_bushing_r %}ДЕФЕКТ{% else %}OK{% endif %}</td></tr>
+                <tr><td>Втулки стабилизатора</td><td class="{% if report.susp_rear_stab_bushing_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_stab_bushing_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_stab_bushing_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_stab_bushing_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Стойки стабилизатора</td><td class="{% if report.susp_rear_stab_link_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_stab_link_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_stab_link_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_stab_link_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Втулки стоек стаб.</td><td class="{% if report.susp_rear_stab_link_bushing_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_stab_link_bushing_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_stab_link_bushing_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_stab_link_bushing_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Солдатик (Задний)</td><td class="{% if report.susp_rear_soldatik_l %}checked{% else %}ok{% endif %}">{% if report.susp_rear_soldatik_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.susp_rear_soldatik_r %}checked{% else %}ok{% endif %}">{% if report.susp_rear_soldatik_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Привод (ШРУСы Задние)</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Граната наружная</td><td class="{% if report.drive_rear_cv_outer_l %}checked{% else %}ok{% endif %}">{% if report.drive_rear_cv_outer_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.drive_rear_cv_outer_r %}checked{% else %}ok{% endif %}">{% if report.drive_rear_cv_outer_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+                <tr><td>Граната внутренняя</td><td class="{% if report.drive_rear_cv_inner_l %}checked{% else %}ok{% endif %}">{% if report.drive_rear_cv_inner_l %}ЗАМЕНА{% else %}OK{% endif %}</td><td class="{% if report.drive_rear_cv_inner_r %}checked{% else %}ok{% endif %}">{% if report.drive_rear_cv_inner_r %}ЗАМЕНА{% else %}OK{% endif %}</td></tr>
+            </table>
+
+            <h4>Сайлентблоки (Зад)</h4>
+            <table>
+                <tr><th width="60%">Узел</th><th class="center">L</th><th class="center">R</th></tr>
+                <tr><td>Верх. попереч. (Внутр)</td><td class="{% if report.susp_rear_sb_upper_trans_f_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_upper_trans_f_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Верх. попереч. (Наруж)</td><td class="{% if report.susp_rear_sb_upper_trans_r_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_upper_trans_r_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Нижн. попереч. (Внутр)</td><td class="{% if report.susp_rear_sb_lower_trans_f_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_lower_trans_f_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Нижн. попереч. (Наруж)</td><td class="{% if report.susp_rear_sb_lower_trans_r_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_lower_trans_r_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Верх. продольн. (Перед)</td><td class="{% if report.susp_rear_sb_upper_long_f_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_upper_long_f_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Верх. продольн. (Зад)</td><td class="{% if report.susp_rear_sb_upper_long_r_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_upper_long_r_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Нижн. продольн. (Перед)</td><td class="{% if report.susp_rear_sb_lower_long_f_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_lower_long_f_r %}checked{% else %}ok{% endif %}">X</td></tr>
+                <tr><td>Нижн. продольн. (Зад)</td><td class="{% if report.susp_rear_sb_lower_long_r_l %}checked{% else %}ok{% endif %}">X</td><td class="{% if report.susp_rear_sb_lower_long_r_r %}checked{% else %}ok{% endif %}">X</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div style="margin-top: 10px;">
+        <div class="bg-info bg-opacity-10" style="background:#f8f9fa; border:1px solid #ccc; padding:5px; margin-bottom: 5px;">
+            <strong>Навесное оборудование:</strong> &nbsp;&nbsp;
+            ГУР: <span class="{% if report.steering_gur %}checked{% else %}ok{% endif %}">{% if report.steering_gur %}ДЕФЕКТ{% else %}OK{% endif %}</span> &nbsp;|&nbsp;
+            Кондиционер: <span class="{% if report.ac_compressor %}checked{% else %}ok{% endif %}">{% if report.ac_compressor %}НЕ РАБОТАЕТ{% else %}OK{% endif %}</span> &nbsp;|&nbsp;
+            Генератор: <span class="{% if report.alternator %}checked{% else %}ok{% endif %}">{% if report.alternator %}РЕМОНТ{% else %}OK{% endif %}</span>
+        </div>
+    </div>
+</body>
+</html>

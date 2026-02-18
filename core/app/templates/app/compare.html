@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}Сравнение автомобилей{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Сравнение цен и характеристик</h1>
+
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">1. Выберите авто из базы</label>
+                        <select name="vehicle_id" class="form-select" required>
+                            <option value="">-- Выберите --</option>
+                            {% for car in my_vehicles %}
+                                <option value="{{ car.pk }}">{{ car.brand }} {{ car.model_name }} ({{ car.license_plate }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-7">
+                        <label class="form-label fw-bold">2. Ссылки на конкурентов (Mashina.kg / Lalafo)</label>
+                        <input type="url" name="urls" class="form-control mb-2" placeholder="Ссылка 1 (https://...)" required>
+                        <input type="url" name="urls" class="form-control mb-2" placeholder="Ссылка 2 (необязательно)">
+                        <input type="url" name="urls" class="form-control" placeholder="Ссылка 3 (необязательно)">
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100 py-3">
+                            <i class="bi bi-arrow-left-right"></i> Сравнить
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if comparison_data %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle bg-white shadow-sm fixed-table">
+                <thead class="table-light">
+                    <tr>
+                        <th class="col-param">Параметр</th>
+
+                        {% for car in comparison_data %}
+                            <th>
+                                {% if car.is_mine %}
+                                    <span class="badge bg-success mb-2">Наше авто</span>
+                                {% else %}
+                                    {% if 'Mashina' in car.source %}
+                                        <span class="badge bg-secondary mb-2">Mashina.kg</span>
+                                    {% elif 'Lalafo' in car.source %}
+                                        <span class="badge bg-info text-dark mb-2">Lalafo.kg</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary mb-2">{{ car.source }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Фото</td>
+                        {% for car in comparison_data %}
+                            <td class="p-2">
+                                <div class="image-container">
+                                    {% if car.image %}
+                                        <img src="{{ car.image }}" alt="Фото">
+                                    {% else %}
+                                        <div class="no-photo">Нет фото</div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Модель</td>
+                        {% for car in comparison_data %}
+                            <td class="fw-bold fs-6">
+                                <a href="{{ car.url }}" target="_blank" class="text-decoration-none car-title-link">
+                                    {{ car.title }}
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Цена</td>
+                        {% for car in comparison_data %}
+                            <td class="fw-bold text-primary fs-5">{{ car.price }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Год выпуска</td>
+                        {% for car in comparison_data %}
+                            <td>{{ car.year|default:"-" }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Пробег</td>
+                        {% for car in comparison_data %}
+                            <td>{{ car.mileage|default:"-" }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Двигатель</td>
+                        {% for car in comparison_data %}
+                            <td>{{ car.engine|default:"-" }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted text-start">Коробка</td>
+                        {% for car in comparison_data %}
+                            <td>{{ car.transmission|default:"-" }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+    {% endif %}
+</div>
+
+<style>
+    /* ГЛАВНЫЙ ФИКС: Фиксированная разметка таблицы */
+    .fixed-table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    /* Первый столбец узкий */
+    .col-param {
+        width: 15%;
+        min-width: 120px;
+    }
+
+    /* Контейнер для фото: фиксированная высота, чтобы не прыгало */
+    .image-container {
+        width: 100%;
+        height: 180px; /* Высота блока фото */
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 6px;
+    }
+
+    /* Картинка вписывается внутрь, сохраняя пропорции */
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Заполняет весь блок (можно поменять на contain, если нужно видеть края) */
+    }
+
+    .no-photo {
+        color: #999;
+        font-size: 0.9rem;
+    }
+
+    /* Обрезаем слишком длинные заголовки (особенно с Лалафо) */
+    .car-title-link {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Максимум 3 строки текста */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.3;
+    }
+</style>
+{% endblock %}

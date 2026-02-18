@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой кабинет{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold display-6">👋 Добро пожаловать, {{ user.first_name|default:user.username }}!</h2>
+            <p class="text-muted lead">Управляйте своими автомобилями и следите за платежами.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="p-3 bg-light rounded border">
+                <small class="text-muted text-uppercase fw-bold">Ваш баланс</small>
+                <div class="fs-4 fw-bold text-dark">0.00 ₽</div>
+            </div>
+        </div>
+    </div>
+
+    {% if contracts %}
+        <h4 class="mb-3 text-secondary"><i class="bi bi-collection-fill"></i> Ваши автомобили</h4>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for contract in contracts %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 overflow-hidden hover-shadow transition">
+
+                    <div class="position-relative">
+                        {% if contract.vehicle.photos.first %}
+                            <img src="{{ contract.vehicle.photos.first.image.url }}" class="card-img-top" alt="Auto" style="height: 220px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary bg-opacity-10 text-center py-5 text-muted" style="height: 220px;">
+                                <i class="bi bi-car-front fs-1 d-block mt-4"></i>
+                                <small>Нет фото</small>
+                            </div>
+                        {% endif %}
+
+                        <div class="position-absolute top-0 end-0 m-3">
+                            {% if contract.status == 'active' %}
+                                <span class="badge bg-success shadow">Действует</span>
+                            {% elif contract.status == 'completed' %}
+                                <span class="badge bg-secondary shadow">Завершен</span>
+                            {% elif contract.status == 'debt' %}
+                                <span class="badge bg-danger shadow animate-pulse">Есть долг</span>
+                            {% elif contract.status == 'terminated' %}
+                                <span class="badge bg-dark shadow">Расторгнут</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <h5 class="card-title fw-bold mb-0 text-primary">
+                                {{ contract.vehicle.brand }} {{ contract.vehicle.model_name }}
+                            </h5>
+                            <small class="text-muted">{{ contract.vehicle.year }} • {{ contract.vehicle.license_plate }}</small>
+                        </div>
+
+                        <hr class="my-3">
+
+                        <ul class="list-group list-group-flush small">
+                            <li class="list-group-item d-flex justify-content-between px-0 py-2 border-0">
+                                <span class="text-muted">Договор №</span>
+                                <span class="fw-bold font-monospace">{{ contract.contract_number }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between px-0 py-2 border-0">
+                                <span class="text-muted">Ежемесячный платеж</span>
+                                <span class="fw-bold fs-6">{{ contract.monthly_payment }} ₽</span>
+                            </li>
+
+                            {% if contract.status == 'active' or contract.status == 'debt' %}
+                            <li class="list-group-item d-flex justify-content-between px-0 py-2 border-0">
+                                <span class="text-muted">Оплатить до</span>
+                                <span class="fw-bold text-danger">
+                                    <i class="bi bi-calendar-event"></i> {{ contract.payment_due_day }}-го числа
+                                </span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="card-footer bg-white border-top-0 pb-3 pt-0">
+                        <a href="{% url 'app:vehicle_detail' contract.vehicle.pk %}" class="btn btn-outline-primary w-100 rounded-pill">
+                            Подробнее об авто
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 bg-light rounded-3 border border-dashed">
+            <i class="bi bi-emoji-smile fs-1 text-muted d-block mb-3"></i>
+            <h4 class="text-dark">У вас пока нет активных договоров</h4>
+            <p class="text-muted mb-4">Свяжитесь с менеджером, чтобы подобрать автомобиль.</p>
+            <a href="#" class="btn btn-primary">Посмотреть каталог</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Небольшая анимация для привлечения внимания к долгам */
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+</style>
+{% endblock %}

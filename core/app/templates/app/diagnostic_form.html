@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% block title %}Диагностика: {{ vehicle.license_plate }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Диагностический лист</h2>
+        <a href="{% url 'app:vehicle_detail' vehicle.pk %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+    </div>
+
+    <form method="post" class="card shadow border-0">
+        {% csrf_token %}
+
+        <div class="card-body p-4">
+            <div class="row mb-4 border-bottom pb-3">
+                <div class="col-md-6">
+                    <h4 class="fw-bold text-primary mb-0">AZA Service.kg</h4>
+                    <small class="text-muted">ул. Алма-Атинская, 291 | +996 570 266 6563</small>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h5 class="mb-0">{{ vehicle.brand }} {{ vehicle.model_name }}</h5>
+                    <div class="fs-5 font-monospace">{{ vehicle.license_plate }}</div>
+                    <div class="text-muted small">{% now "d.m.Y" %}</div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-xl-6 border-end-xl">
+                    <div class="bg-light p-2 rounded mb-3 text-center fw-bold text-uppercase border">Передняя ось</div>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Тормозная система</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3">Шланг тормозной</td><td class="text-center">{{ form.brake_front_hose_l }}</td><td class="text-center">{{ form.brake_front_hose_r }}</td></tr>
+                            <tr><td class="ps-3">Диск тормозной</td><td class="text-center">{{ form.brake_front_disc_l }}</td><td class="text-center">{{ form.brake_front_disc_r }}</td></tr>
+                            <tr><td class="ps-3">Колодки</td><td class="text-center">{{ form.brake_front_pads_l }}</td><td class="text-center">{{ form.brake_front_pads_r }}</td></tr>
+                            <tr><td class="ps-3">Суппорт</td><td class="text-center">{{ form.brake_front_caliper_l }}</td><td class="text-center">{{ form.brake_front_caliper_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Подвеска</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3">Амортизатор</td><td class="text-center">{{ form.susp_front_shock_l }}</td><td class="text-center">{{ form.susp_front_shock_r }}</td></tr>
+                            <tr><td class="ps-3">Опора стойки</td><td class="text-center">{{ form.susp_front_mount_l }}</td><td class="text-center">{{ form.susp_front_mount_r }}</td></tr>
+                            <tr><td class="ps-3">Пыльник/отбойник</td><td class="text-center">{{ form.susp_front_boot_l }}</td><td class="text-center">{{ form.susp_front_boot_r }}</td></tr>
+                            <tr><td class="ps-3">Пружина</td><td class="text-center">{{ form.susp_front_spring_l }}</td><td class="text-center">{{ form.susp_front_spring_r }}</td></tr>
+                            <tr><td class="ps-3">Шаровая нижняя</td><td class="text-center">{{ form.susp_front_ball_lower_l }}</td><td class="text-center">{{ form.susp_front_ball_lower_r }}</td></tr>
+                            <tr><td class="ps-3">Шаровая верхняя</td><td class="text-center">{{ form.susp_front_ball_upper_l }}</td><td class="text-center">{{ form.susp_front_ball_upper_r }}</td></tr>
+                            <tr><td class="ps-3">Подшипник ступицы</td><td class="text-center">{{ form.susp_front_bearing_l }}</td><td class="text-center">{{ form.susp_front_bearing_r }}</td></tr>
+                            <tr><td class="ps-3">Развальный рычаг</td><td class="text-center">{{ form.susp_front_camber_arm_l }}</td><td class="text-center">{{ form.susp_front_camber_arm_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Рулевое и Стабилизация</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3 fw-bold bg-light text-dark">Стабилизатор (Сам)</td><td class="text-center">{{ form.susp_front_stabilizer_l }}</td><td class="text-center">{{ form.susp_front_stabilizer_r }}</td></tr>
+                            <tr><td class="ps-3">Втулки стабилизатора</td><td class="text-center">{{ form.susp_front_stab_bushing_l }}</td><td class="text-center">{{ form.susp_front_stab_bushing_r }}</td></tr>
+                            <tr><td class="ps-3">Стойка стаб. (Солдатик)</td><td class="text-center">{{ form.susp_front_stab_link_l }}</td><td class="text-center">{{ form.susp_front_stab_link_r }}</td></tr>
+                            <tr><td class="ps-3">Втулки стоек стаб.</td><td class="text-center">{{ form.susp_front_stab_link_bushing_l }}</td><td class="text-center">{{ form.susp_front_stab_link_bushing_r }}</td></tr>
+
+                            <tr><td class="ps-3">Рулевая тяга</td><td class="text-center">{{ form.steering_tie_rod_l }}</td><td class="text-center">{{ form.steering_tie_rod_r }}</td></tr>
+                            <tr><td class="ps-3">Рулевой наконечник</td><td class="text-center">{{ form.steering_tip_l }}</td><td class="text-center">{{ form.steering_tip_r }}</td></tr>
+
+                            <tr class="table-info">
+                                <td class="ps-3 fw-bold">Рулевая рейка</td>
+                                <td colspan="2" class="text-center">{{ form.steering_rack }}</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td class="ps-3 fw-bold">Крестовина рул. вала</td>
+                                <td colspan="2" class="text-center">{{ form.steering_ujoint }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Привод (ШРУСы)</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3">Наружная граната</td><td class="text-center">{{ form.drive_front_cv_outer_l }}</td><td class="text-center">{{ form.drive_front_cv_outer_r }}</td></tr>
+                            <tr><td class="ps-3">Внутренняя граната</td><td class="text-center">{{ form.drive_front_cv_inner_l }}</td><td class="text-center">{{ form.drive_front_cv_inner_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Сайлентблоки</h6>
+                    <table class="table table-sm table-hover align-middle mb-0 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr class="table-secondary"><td colspan="3" class="small fw-bold ps-2 text-dark">Верхний рычаг</td></tr>
+                            <tr><td class="ps-4">Передний с/б</td><td class="text-center">{{ form.susp_front_sb_upper_f_l }}</td><td class="text-center">{{ form.susp_front_sb_upper_f_r }}</td></tr>
+                            <tr><td class="ps-4">Задний с/б</td><td class="text-center">{{ form.susp_front_sb_upper_r_l }}</td><td class="text-center">{{ form.susp_front_sb_upper_r_r }}</td></tr>
+
+                            <tr class="table-secondary"><td colspan="3" class="small fw-bold ps-2 text-dark">Нижний рычаг</td></tr>
+                            <tr><td class="ps-4">Передний с/б</td><td class="text-center">{{ form.susp_front_sb_lower_f_l }}</td><td class="text-center">{{ form.susp_front_sb_lower_f_r }}</td></tr>
+                            <tr><td class="ps-4">Задний с/б</td><td class="text-center">{{ form.susp_front_sb_lower_r_l }}</td><td class="text-center">{{ form.susp_front_sb_lower_r_r }}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="bg-light p-2 rounded mb-3 text-center fw-bold text-uppercase border">Задняя ось</div>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Тормозная система</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3">Шланг тормозной</td><td class="text-center">{{ form.brake_rear_hose_l }}</td><td class="text-center">{{ form.brake_rear_hose_r }}</td></tr>
+                            <tr><td class="ps-3">Диск тормозной</td><td class="text-center">{{ form.brake_rear_disc_l }}</td><td class="text-center">{{ form.brake_rear_disc_r }}</td></tr>
+                            <tr><td class="ps-3">Колодки</td><td class="text-center">{{ form.brake_rear_pads_l }}</td><td class="text-center">{{ form.brake_rear_pads_r }}</td></tr>
+                            <tr><td class="ps-3">Суппорт</td><td class="text-center">{{ form.brake_rear_caliper_l }}</td><td class="text-center">{{ form.brake_rear_caliper_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Подвеска</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3">Амортизатор</td><td class="text-center">{{ form.susp_rear_shock_l }}</td><td class="text-center">{{ form.susp_rear_shock_r }}</td></tr>
+                            <tr><td class="ps-3">Опора стойки</td><td class="text-center">{{ form.susp_rear_mount_l }}</td><td class="text-center">{{ form.susp_rear_mount_r }}</td></tr>
+                            <tr><td class="ps-3">Пыльник/отбойник</td><td class="text-center">{{ form.susp_rear_boot_l }}</td><td class="text-center">{{ form.susp_rear_boot_r }}</td></tr>
+                            <tr><td class="ps-3">Пружина</td><td class="text-center">{{ form.susp_rear_spring_l }}</td><td class="text-center">{{ form.susp_rear_spring_r }}</td></tr>
+                            <tr><td class="ps-3">Шаровая нижняя</td><td class="text-center">{{ form.susp_rear_ball_lower_l }}</td><td class="text-center">{{ form.susp_rear_ball_lower_r }}</td></tr>
+                            <tr><td class="ps-3">Шаровая верхняя</td><td class="text-center">{{ form.susp_rear_ball_upper_l }}</td><td class="text-center">{{ form.susp_rear_ball_upper_r }}</td></tr>
+                            <tr><td class="ps-3">Подшипник ступицы</td><td class="text-center">{{ form.susp_rear_bearing_l }}</td><td class="text-center">{{ form.susp_rear_bearing_r }}</td></tr>
+                            <tr><td class="ps-3">Развальный рычаг</td><td class="text-center">{{ form.susp_rear_camber_arm_l }}</td><td class="text-center">{{ form.susp_rear_camber_arm_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Стабилизация и Балка</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3 fw-bold bg-light text-dark">Сайлентблок балки</td><td class="text-center">{{ form.susp_rear_beam_bushing_l }}</td><td class="text-center">{{ form.susp_rear_beam_bushing_r }}</td></tr>
+                            <tr><td class="ps-3">Втулки стабилизатора</td><td class="text-center">{{ form.susp_rear_stab_bushing_l }}</td><td class="text-center">{{ form.susp_rear_stab_bushing_r }}</td></tr>
+                            <tr><td class="ps-3">Стойки стабилизатора</td><td class="text-center">{{ form.susp_rear_stab_link_l }}</td><td class="text-center">{{ form.susp_rear_stab_link_r }}</td></tr>
+                            <tr><td class="ps-3">Втулка стоек стаб.</td><td class="text-center">{{ form.susp_rear_stab_link_bushing_l }}</td><td class="text-center">{{ form.susp_rear_stab_link_bushing_r }}</td></tr>
+                            <tr><td class="ps-3">Солдатик (Задний)</td><td class="text-center">{{ form.susp_rear_soldatik_l }}</td><td class="text-center">{{ form.susp_rear_soldatik_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Привод (ШРУСы Задние)</h6>
+                    <table class="table table-sm table-hover align-middle mb-4 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ps-3">Наружная граната</td><td class="text-center">{{ form.drive_rear_cv_outer_l }}</td><td class="text-center">{{ form.drive_rear_cv_outer_r }}</td></tr>
+                            <tr><td class="ps-3">Внутренняя граната</td><td class="text-center">{{ form.drive_rear_cv_inner_l }}</td><td class="text-center">{{ form.drive_rear_cv_inner_r }}</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h6 class="text-primary fw-bold mt-3 border-bottom pb-1">Сайлентблоки</h6>
+                    <table class="table table-sm table-hover align-middle mb-0 table-bordered border-light">
+                        <thead class="table-light text-center small text-muted"><tr><th class="w-50 text-start ps-3">Узел</th><th>Л (L)</th><th>П (R)</th></tr></thead>
+                        <tbody>
+                            <tr class="table-secondary"><td colspan="3" class="small fw-bold ps-2 text-dark">Верхний поперечный</td></tr>
+                            <tr><td class="ps-4">Передний (внутр)</td><td class="text-center">{{ form.susp_rear_sb_upper_trans_f_l }}</td><td class="text-center">{{ form.susp_rear_sb_upper_trans_f_r }}</td></tr>
+                            <tr><td class="ps-4">Задний (наруж)</td><td class="text-center">{{ form.susp_rear_sb_upper_trans_r_l }}</td><td class="text-center">{{ form.susp_rear_sb_upper_trans_r_r }}</td></tr>
+
+                            <tr class="table-secondary"><td colspan="3" class="small fw-bold ps-2 text-dark">Нижний поперечный</td></tr>
+                            <tr><td class="ps-4">Передний (внутр)</td><td class="text-center">{{ form.susp_rear_sb_lower_trans_f_l }}</td><td class="text-center">{{ form.susp_rear_sb_lower_trans_f_r }}</td></tr>
+                            <tr><td class="ps-4">Задний (наруж)</td><td class="text-center">{{ form.susp_rear_sb_lower_trans_r_l }}</td><td class="text-center">{{ form.susp_rear_sb_lower_trans_r_r }}</td></tr>
+
+                            <tr class="table-secondary"><td colspan="3" class="small fw-bold ps-2 text-dark">Верхний продольный</td></tr>
+                            <tr><td class="ps-4">Передний</td><td class="text-center">{{ form.susp_rear_sb_upper_long_f_l }}</td><td class="text-center">{{ form.susp_rear_sb_upper_long_f_r }}</td></tr>
+                            <tr><td class="ps-4">Задний</td><td class="text-center">{{ form.susp_rear_sb_upper_long_r_l }}</td><td class="text-center">{{ form.susp_rear_sb_upper_long_r_r }}</td></tr>
+
+                            <tr class="table-secondary"><td colspan="3" class="small fw-bold ps-2 text-dark">Нижний продольный</td></tr>
+                            <tr><td class="ps-4">Передний</td><td class="text-center">{{ form.susp_rear_sb_lower_long_f_l }}</td><td class="text-center">{{ form.susp_rear_sb_lower_long_f_r }}</td></tr>
+                            <tr><td class="ps-4">Задний</td><td class="text-center">{{ form.susp_rear_sb_lower_long_r_l }}</td><td class="text-center">{{ form.susp_rear_sb_lower_long_r_r }}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="bg-info bg-opacity-10 p-3 rounded border border-info">
+                        <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">Навесное оборудование</h6>
+                        <div class="d-flex gap-4 flex-wrap justify-content-center">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label fw-bold me-2">ГУР (Гидроусилитель)</label>
+                                {{ form.steering_gur }}
+                            </div>
+                            <div class="form-check form-check-inline border-start ps-4">
+                                <label class="form-check-label fw-bold me-2">Кондиционер (Компрессор)</label>
+                                {{ form.ac_compressor }}
+                            </div>
+                            <div class="form-check form-check-inline border-start ps-4">
+                                <label class="form-check-label fw-bold me-2">Генератор</label>
+                                {{ form.alternator }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm py-3 fw-bold text-uppercase">
+                    <i class="bi bi-save-fill"></i> Сохранить результаты диагностики
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Стиль чекбоксов: крупные и красные */
+    input[type="checkbox"] {
+        width: 1.5em;
+        height: 1.5em;
+        cursor: pointer;
+        accent-color: #dc3545; /* Красный цвет */
+        vertical-align: middle;
+        border: 1px solid #adb5bd;
+    }
+
+    /* Текстовое поле комментария */
+    textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 1.1rem;
+    }
+
+    /* Разделитель колонок на больших экранах */
+    @media (min-width: 1200px) {
+        .border-end-xl {
+            border-right: 2px solid #e9ecef;
+        }
+    }
+
+    /* Подсветка строки при наведении для удобства */
+    table tbody tr:hover {
+        background-color: rgba(0,0,0,0.02);
+    }
+</style>
+{% endblock %}
