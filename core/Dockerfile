@@ -1,11 +1,12 @@
 # Используем Python 3.12
 FROM python:3.12-slim
 
-# Исправляем имена пакетов для Debian Bookworm/Trixie
+# Устанавливаем системные библиотеки + компилятор для сборки pycairo
 RUN apt-get update && apt-get install -y \
-    libcairo2 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
+    gcc \
+    pkg-config \
+    libcairo2-dev \
+    libpango1.0-dev \
     libgdk-pixbuf-2.0-0 \
     libffi-dev \
     shared-mime-info \
@@ -15,16 +16,18 @@ RUN apt-get update && apt-get install -y \
 # Настройка рабочей папки
 WORKDIR /app
 
-# Сначала копируем зависимости, чтобы кэшировать этот слой
+# Копируем зависимости
 COPY requirements.txt .
+
+# Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем код
+# Копируем весь код
 COPY . .
 
 # Собираем статику
-# Используем заглушку для SECRET_KEY
 RUN SECRET_KEY=build_secret python manage.py collectstatic --noinput
 
-# Запуск
+# Запуск через Gunicorn
+# Важно: убедитесь, что путь core.wsgi верный (папка с wsgi.py называется core)
 CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
