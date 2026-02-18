@@ -25,14 +25,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем код
 COPY . .
 
-# Даем права на выполнение скрипта
-RUN chmod +x entrypoint.sh
 
 # Собираем статику
 RUN SECRET_KEY=build_secret python manage.py collectstatic --noinput
-
-# Запускаем через entrypoint
-CMD ["./entrypoint.sh"]
 
 # Запуск через Gunicorn
 # Важно: убедитесь, что путь core.wsgi верный (папка с wsgi.py называется core)
