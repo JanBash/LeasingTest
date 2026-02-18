@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 def create_admin_view(request):
     User = get_user_model()
     if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'ваш_пароль_тут')
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin')
         return HttpResponse("Админ создан!")
     return HttpResponse("Админ уже существует.")
 
